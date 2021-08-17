@@ -3,12 +3,12 @@ entries:
   single-vm:
   - apiVersion: v2
     appVersion: "1.0"
-    created: "2021-08-17T22:55:11.886834053Z"
+    created: "2021-08-17T22:57:59.32132411Z"
     description: A Helm chart for Kubernetes
     digest: 5c2f3915254870f91c2c220cc4454b04e0c3c29ff09126acd7928d00ce13122d
     icon: https://en.wikipedia.org/wiki/Pok%C3%A9mon#/media/File:International_Pok%C3%A9mon_logo.svg
     name: single-vm
     urls:
-    - https://hultzj.github.io/kubevirt-vm/charts/single-vm-0.1.0.tgz
+    - https://hultzj.github.io/kubevirt-vm/helm-chart/charts/single-vm-0.1.0.tgz
     version: 0.1.0
-generated: "2021-08-17T22:55:11.885135531Z"
+generated: "2021-08-17T22:57:59.318752049Z"
