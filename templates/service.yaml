@@ -1,15 +1,19 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "vm.fullname" . }}
+  name: {{ include "single-vm.fullname" . }}
   labels:
-    {{- include "vm.labels" . | nindent 4 }}
+    vm.kubevirt.io/name: {{ include "single-vm.name" . }}
+    helm.sh/chart: {{ include "single-vm.chart" . }}
+    vm.kubevirt.io/instance: {{ .Release.Name }}
+    vm.kubevirt.io/managed-by: {{ .Release.Service }}
 spec:
   type: {{ .Values.service.type }}
+  externalTrafficPolicy: Cluster
   ports:
     - port: {{ .Values.service.port }}
-      targetPort: http
       protocol: TCP
-      name: http
   selector:
-    {{- include "vm.selectorLabels" . | nindent 4 }}
+    kubevirt.io/vm: {{ include "single-vm.name" . }}
+    app.kubernetes.io/name: {{ include "single-vm.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
