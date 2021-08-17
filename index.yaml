@@ -9,6 +9,6 @@ entries:
     icon: https://en.wikipedia.org/wiki/Pok%C3%A9mon#/media/File:International_Pok%C3%A9mon_logo.svg
     name: single-vm
     urls:
-    - https://hultzj.github.io/kubevirt-vm/kubevirt-vm/charts/single-vm-0.1.0.tgz
+    - https://hultzj.github.io/kubevirt-vm/charts/single-vm-0.1.0.tgz
     version: 0.1.0
 generated: "2021-08-17T23:36:15.480131258Z"
