@@ -27,9 +27,9 @@ spec:
         memory: {{ .Values.resources.requests.memory }}
   terminationGracePeriodSeconds: 0
   volumes:
-  - name: registryvolume
-    registryDisk:
-      image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
+  - name: containerdisk
+    containerDisk:
+      image: quay.io/kubevirt/cirros-container-disk-demo
   - cloudInitNoCloud:
       userData: |-
         #cloud-config
