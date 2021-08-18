@@ -1,39 +1,37 @@
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  creationTimestamp: null
-  labels:
-    special: {{ include "single-vm.name" . }}
-    helm.sh/chart: {{ include "single-vm.chart" . }}
-    vm.kubevirt.io/instance: {{ .Release.Name }}
-    vm.kubevirt.io/managed-by: {{ .Release.Service }}
-  name: {{ include "single-vm.name" . }}
+  name: testvm
 spec:
-  domain:
-    devices:
-      disks:
-      - disk:
-          bus: virtio
-        name: registrydisk
-        volumeName: registryvolume
-      - disk:
-          bus: virtio
-        name: cloudinitdisk
-        volumeName: cloudinitvolume
-    machine:
-      type: ""
-    resources:
-      requests:
-        memory: {{ .Values.resources.requests.memory }}
-  terminationGracePeriodSeconds: 0
-  volumes:
-  - name: containerdisk
-    containerDisk:
-      image: quay.io/kubevirt/cirros-container-disk-demo
-  - cloudInitNoCloud:
-      userData: |-
-        #cloud-config
-        password: fedora
-        chpasswd: { expire: False }
-    name: cloudinitvolume
-status: {}
+  running: false
+  template:
+    metadata:
+      labels:
+        kubevirt.io/size: small
+        kubevirt.io/domain: testvm
+    spec:
+      domain:
+        devices:
+          disks:
+            - name: containerdisk
+              disk:
+                bus: virtio
+            - name: cloudinitdisk
+              disk:
+                bus: virtio
+          interfaces:
+          - name: default
+            bridge: {}
+        resources:
+          requests:
+            memory: 64M
+      networks:
+      - name: default
+        pod: {}
+      volumes:
+        - name: containerdisk
+          containerDisk:
+            image: quay.io/kubevirt/cirros-container-disk-demo
+        - name: cloudinitdisk
+          cloudInitNoCloud:
+            userDataBase64: SGkuXG4=
