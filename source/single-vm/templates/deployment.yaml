@@ -1,5 +1,5 @@
-apiVersion: kubevirt.io/v1alpha2
-kind: VirtualMachineInstance
+apiVersion: kubevirt.io/v1alpha3
+kind: VirtualMachine
 metadata:
   creationTimestamp: null
   labels:
@@ -21,7 +21,7 @@ spec:
         name: cloudinitdisk
         volumeName: cloudinitvolume
     machine:
-      type: ""
+      type: pc-q35-rhel8.3.0
     resources:
       requests:
         memory: {{ .Values.resources.requests.memory }}
