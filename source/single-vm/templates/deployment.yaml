@@ -1,39 +1,82 @@
 apiVersion: kubevirt.io/v1alpha3
 kind: VirtualMachine
 metadata:
-  creationTimestamp: null
+  annotations:
+    vm.kubevirt.io/flavor: tiny
+    vm.kubevirt.io/os: fedora
+    vm.kubevirt.io/validations: |
+      [
+        {
+          "name": "minimal-required-memory",
+          "path": "jsonpath::.spec.domain.resources.requests.memory",
+          "rule": "integer",
+          "message": "This VM requires more memory.",
+          "min": 1073741824
+        }
+      ]
+    vm.kubevirt.io/workload: server
+    name.os.template.kubevirt.io/fedora33: Fedora 32 or higher
+    description: VM example
   labels:
-    special: {{ include "single-vm.name" . }}
-    helm.sh/chart: {{ include "single-vm.chart" . }}
-    vm.kubevirt.io/instance: {{ .Release.Name }}
-    vm.kubevirt.io/managed-by: {{ .Release.Service }}
-  name: {{ include "single-vm.name" . }}
+    app: vm-example
+    vm.kubevirt.io/template: fedora-server-tiny
+    vm.kubevirt.io/template.revision: '1'
+    vm.kubevirt.io/template.version: v0.13.2
+    os.template.kubevirt.io/fedora33: 'true'
+    flavor.template.kubevirt.io/tiny: 'true'
+    workload.template.kubevirt.io/server: 'true'
+  name: vm-example
 spec:
-  domain:
-    devices:
-      disks:
-      - disk:
-          bus: virtio
-        name: registrydisk
-        volumeName: registryvolume
-      - disk:
-          bus: virtio
-        name: cloudinitdisk
-        volumeName: cloudinitvolume
-    machine:
-      type: pc-q35-rhel8.3.0
-    resources:
-      requests:
-        memory: {{ .Values.resources.requests.memory }}
-  terminationGracePeriodSeconds: 0
-  volumes:
-  - name: registryvolume
-    registryDisk:
-      image: "{{ .Values.image.repository }}/{{ .Values.image.name }}:{{ .Values.image.tag }}"
-  - cloudInitNoCloud:
-      userData: |-
-        #cloud-config
-        password: fedora
-        chpasswd: { expire: False }
-    name: cloudinitvolume
-status: {}
+  running: false
+  template:
+    metadata:
+      labels:
+        kubevirt.io/domain: vm-example
+        kubevirt.io/size: tiny
+        vm.kubevirt.io/name: vm-example
+        os.template.kubevirt.io/fedora33: 'true'
+        flavor.template.kubevirt.io/tiny: 'true'
+        workload.template.kubevirt.io/server: 'true'
+    spec:
+      domain:
+        cpu:
+          cores: 1
+          sockets: 1
+          threads: 1
+        devices:
+          disks:
+            - bootOrder: 1
+              disk:
+                bus: virtio
+              name: containerdisk
+            - disk:
+                bus: virtio
+              name: cloudinitdisk
+          interfaces:
+            - masquerade: {}
+              model: virtio
+              name: default
+          networkInterfaceMultiqueue: true
+          rng: {}
+        machine:
+          type: pc-q35-rhel8.3.0
+        resources:
+          requests:
+            memory: 1Gi
+      evictionStrategy: LiveMigrate
+      hostname: vm-example
+      networks:
+        - name: default
+          pod: {}
+      volumes:
+        - containerDisk:
+            image: 'kubevirt/fedora-cloud-container-disk-demo:latest'
+          name: containerdisk
+        - cloudInitNoCloud:
+            userData: |
+              #cloud-config
+              user: fedora
+              password: nig2-hp76-q467
+              chpasswd:
+                expire: false
+          name: cloudinitdisk
