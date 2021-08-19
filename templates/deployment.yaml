@@ -68,7 +68,6 @@ spec:
       networks:
         - name: default
           pod: {}
-      terminationGracePeriodSeconds: 180
       volumes:
         - containerDisk:
             image: 'kubevirt/fedora-cloud-container-disk-demo:latest'
